@@ -3,7 +3,6 @@
     @include('default._errors')
     <form class="form-horizontal" action="{{route('shop.reg')}}" method="post" enctype="multipart/form-data">
 
-
         <div class="form-group">
             <label for="inputPassword7" class="col-sm-2 control-label">账号</label>
             <div class="col-sm-10">
@@ -39,6 +38,16 @@
             </div>
         </div>
 
+
+        <div class="form-group">
+            <label for="inputPassword1" class="col-sm-2 control-label">验证码</label>
+            <div class="col-sm-10">
+                <div><img src="{{captcha_src('flat')}}"  onclick="this.src='/captcha/flat?'+Math.random()" alt=""></div>
+                <input  type="text" name="captcha">
+            </div>
+        </div>
+        
+
         {{--<button id="add" type="button" class="btn btn-primary">点击添加店铺信息</button>--}}
 
         <div id="info" style="display: none">
@@ -49,6 +58,7 @@
                 </div>
             </div>
             {{ csrf_field() }}
+
 
             <div class="form-group">
                 <label for="inputPassword7" class="col-sm-2 control-label">logo</label>

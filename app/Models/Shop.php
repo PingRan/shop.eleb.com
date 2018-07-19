@@ -13,9 +13,8 @@ class Shop extends Model
     ];
 
 
-    public function shop_img()
+    public function shop_category()
     {
-
-        return Storage::url($this->shop_img);
-    }
+      return $this->hasOne(ShopCategory::class,'id','shop_category_id');
+}
 }

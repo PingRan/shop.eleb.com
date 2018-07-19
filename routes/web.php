@@ -17,3 +17,14 @@ Route::get('/', function () {
 Route::get('shop/reg','ShopController@index')->name('shop.reg');
 Route::post('shop/reg','ShopController@store')->name('shop.reg');
 Route::get('shop','ShopController@home')->name('shop.home');
+Route::get('shop/login','ShopController@login')->name('shop.login');
+
+Route::post('shop/login','ShopController@check')->name('shop.login');
+
+Route::get('shop/loginout','ShopController@loginout')->name('shop.loginout');
+
+Route::get('shop/uppassword','ShopController@uppassword')->name('shop.uppassword');
+
+Route::post('shop/uppassword','ShopController@savepassword')->name('shop.savepassword');
+
+Route::get('shopshow','ShopController@shopshow')->name('shopshow');
