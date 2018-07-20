@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\MenuCategory;
 use App\Models\Shop;
 use App\Models\ShopCategory;
 use App\User;
@@ -15,6 +16,14 @@ use Illuminate\Validation\Rule;
 class ShopController extends Controller
 {
     //
+    public function __construct()
+    {
+        $this->middleware('auth',[
+            'only'=>['uppassword','savepassword','shopshow']
+        ]);
+    }
+
+
     public function index()
     {
         $categories=ShopCategory::all();
@@ -139,13 +148,6 @@ class ShopController extends Controller
     }
 
 
-    public function home()
-    {
-
-        return view('shop.home');
-
-    }
-
     public function login()
     {
         if(Auth::check()){
@@ -265,6 +267,67 @@ class ShopController extends Controller
         $shop=$userinfo->shops()->first();
 
         return view('shop.shopshow',compact('shop'));
+    }
+
+    public function edit()
+    {
+        $shop_id=Auth::user()->shop_id;
+
+        $shop=Shop::where('id',$shop_id)->first();
+
+        $categories=ShopCategory::all();
+
+        return view('shop.edit',compact('shop','categories'));
+    }
+
+    public function updateshop(Request $request,Shop $shop)
+    {
+
+        $this->validate($request,
+            [
+                'shop_category_id' => ['required'],
+                'shop_name' => ['required', 'max:20'],
+                'shop_img' => ['dimensions:min_width=1,min_height=1'],
+                'start_send' => ['required'],
+                'send_cost' => ['required'],
+            ], [
+                'shop_name.required' => '店铺名字不能为空',
+                'shop_name.max' => '店铺名字在20位以内',
+                'start_send.required' => '起送金额不能为空',
+                'send_cost.required' => '配送金额不能为空',
+                'shop_img.dimensions' => '请上传一张图片',
+            ]
+        );
+
+
+
+        $data = ['shop_name' => $request->shop_name, 'shop_category_id' => $request->shop_category_id, 'start_send' => $request->start_send, 'send_cost' => $request->send_cost,'status'=>$shop->status];
+
+
+        $data['brand'] = $request->brand??0;
+        $data['on_time'] = $request->on_time??0;
+        $data['fengniao'] = $request->fengniao??0;
+        $data['bao'] = $request->bao??0;
+        $data['piao'] = $request->piao??0;
+        $data['zhun'] = $request->zhun??0;
+
+        $data['shop_rating'] = 5;//商店评分要优化
+
+        if ($request->shop_img) {
+
+            $fileName = $request->shop_img->store('public/shop_img');
+            $data['shop_img'] = $fileName;
+        }
+
+
+        $shop->update($data);
+
+        session()->flash('success', '修改成功');
+
+        return redirect()->route('shop.home');
+
+
+
     }
 
 }

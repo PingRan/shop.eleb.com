@@ -27,7 +27,10 @@
                 <li class="dropdown">
                     <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false">店铺<span class="caret"></span></a>
                     <ul class="dropdown-menu">
-                        <li><a href="{{route('shopshow')}}">我的店铺</a></li>
+                        <li><a href="{{route('shopshow')}}">我的店铺信息</a></li>
+                        <li><a href="{{route('shop.edit')}}">修改店铺信息</a></li>
+                        <li><a href="{{route('menucategories.create')}}">添加菜品分类</a></li>
+                        <li><a href="{{route('menus.create')}}">添加菜品</a></li>
                     </ul>
                 </li>
                 @endif
@@ -56,7 +59,7 @@
             {{--</form>--}}
             <ul class="nav navbar-nav navbar-right">
                 @guest
-                <li><a href="{{route('shop.login')}}">登录</a></li>
+                <li><a href="{{route('login')}}">登录</a></li>
                 @endguest
                 @auth
                 <li class="dropdown">

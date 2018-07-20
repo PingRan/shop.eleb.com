@@ -15,11 +15,11 @@
     </style>
 </head>
 <body>
-<!--博客布局-->
-<div class="container" style="position: absolute;top:0;margin-left: 350px;">
+
+<div class="container">
     <div class="row">
         <div class="col-xs-12">
-           @include('default._nav')
+            @include('default._nav')
         </div>
     </div>
 
