@@ -19,22 +19,47 @@ class MenuController extends Controller
     }
     public function index(Request $request)
     {
-       $category_id=$request->category_id;
+         $shop_id=$request->shop_id;
 
-        $menucategories=MenuCategory::all();
+         session(['shop_id'=>$shop_id]);
 
-        $menus=Menu::paginate(10);
+        $menucategories=MenuCategory::where('shop_id',$shop_id)->get();
+
+
+        $condition=[];//存储搜索条件.
+
+        $condition[]=['shop_id',$shop_id];
+
+        $category_id=$request->category_id;
 
        if($category_id){
-           $menus=Menu::where('category_id',$category_id)->paginate(10);
+           $condition[]=['category_id',$category_id];
        }
+
+       if($request->min_price&&$request->max_price){
+           $condition[]=['goods_price','>=',$request->min_price];
+           $condition[]=['goods_price','<=',$request->max_price];
+       }
+
+        if($request->max_price){
+            $condition[]=['goods_price','<=',$request->max_price];
+        }
+
+        if($request->min_price){
+            $condition[]=['goods_price','>=',$request->min_price];
+        }
+
+
+        $menus=Menu::where($condition)->paginate(10);
 
        return view('menu.index',compact('menus','menucategories','category_id'));
     }
 
     public function create()
     {
-        $menucategories=MenuCategory::all();
+        $shop_id=session('shop_id');
+
+        $menucategories=MenuCategory::where('shop_id',$shop_id)->get();
 
         return view('menu.create',compact('menucategories'));
 
@@ -79,18 +104,20 @@ class MenuController extends Controller
        }
 
 
-       $request['shop_id']=Auth::user()->shop_id;
+       $request['shop_id']=session('shop_id');
 
        Menu::create($request->input());
 
        session()->flash('success','菜品添加成功');
 
-       return redirect()->route('menus.index');
+       return redirect()->route('menus.index',['shop_id'=>session('shop_id')]);
     }
 
     public function edit(Menu $menu)
     {
-       $menucategories=MenuCategory::all();
+        $shop_id=session('shop_id');
+
+        $menucategories=MenuCategory::where('shop_id',$shop_id)->get();
 
       return view('menu.edit',compact('menu','menucategories'));
     }
@@ -134,7 +161,7 @@ class MenuController extends Controller
 
         session()->flash('success','菜品修改成功');
 
-        return redirect()->route('menus.index');
+        return redirect()->route('menus.index',['shop_id'=>session('shop_id')]);
 
 
     }
@@ -148,14 +175,14 @@ class MenuController extends Controller
     }
 
 
-    public function showmenus(Request $request)
-    {
-        $category_id=$request->category_id;
-
-        $menus=Menu::where('category_id',$category_id)->get('goods_name');
-
-        return view('menu.showmenus',compact('menus'));
-    }
+//    public function showmenus(Request $request)
+//    {
+//        $category_id=$request->category_id;
+//
+//        $menus=Menu::where('category_id',$category_id)->get('goods_name');
+//
+//        return view('menu.showmenus',compact('menus'));
+//    }
 
 
     public function show(Menu $menu)

@@ -28,9 +28,8 @@
                     <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false">店铺<span class="caret"></span></a>
                     <ul class="dropdown-menu">
                         <li><a href="{{route('shopshow')}}">我的店铺信息</a></li>
-                        <li><a href="{{route('shop.edit')}}">修改店铺信息</a></li>
-                        <li><a href="{{route('menucategories.create')}}">添加菜品分类</a></li>
-                        <li><a href="{{route('menus.create')}}">添加菜品</a></li>
+                        {{--<li><a href="{{route('menucategories.create')}}">添加菜品分类</a></li>--}}
+                        {{--<li><a href="{{route('menus.create')}}">添加菜品</a></li>--}}
                     </ul>
                 </li>
                 @endif

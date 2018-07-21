@@ -30,7 +30,7 @@
             <label for="inputPassword1" class="col-sm-2 control-label">验证码</label>
             <div class="col-sm-10">
                 <div><img src="{{captcha_src('flat')}}"  onclick="this.src='/captcha/flat?'+Math.random()" alt=""></div>
-                <input  type="text" name="captcha">
+                <input   class="form-control" type="text" name="captcha">
             </div>
         </div>
 
@@ -38,7 +38,7 @@
 
         <div class="form-group">
             <div class="col-sm-offset-2 col-sm-10">
-                <button type="submit" class="btn btn-primary">登录</button>
+                <button type="submit" class="btn btn-primary btn-block">登录</button>
             </div>
         </div>
     </form>

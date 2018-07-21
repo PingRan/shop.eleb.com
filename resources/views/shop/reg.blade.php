@@ -6,51 +6,32 @@
         <div class="form-group">
             <label for="inputPassword7" class="col-sm-2 control-label">账号</label>
             <div class="col-sm-10">
-                <input type="text" name="name" value="{{old('name')}}">
+                <input type="text" class="form-control" name="name" value="{{old('name')}}">
             </div>
         </div>
 
         <div class="form-group">
             <label for="inputPassword7" class="col-sm-2 control-label">email</label>
             <div class="col-sm-10">
-                <input type="text" name="email" value="{{old('email')}}">
+                <input type="text"   class="form-control" name="email" value="{{old('email')}}">
             </div>
         </div>
 
         <div class="form-group">
             <label for="inputPassword7" class="col-sm-2 control-label">密码</label>
             <div class="col-sm-10">
-                <input type="password" name="password">
+                <input  class="form-control" type="password" name="password">
             </div>
         </div>
 
         <div class="form-group">
             <label for="inputPassword7" class="col-sm-2 control-label">确认密码</label>
             <div class="col-sm-10">
-                <input type="password" name="password_confirmation">
+                <input  class="form-control"  type="password" name="password_confirmation">
             </div>
         </div>
 
-        <div class="form-group">
-            <label for="inputPassword7" class="col-sm-2 control-label">添加店铺(选中表示添加店铺)</label>
-            <div class="col-sm-10">
-                <input  id="add" type="checkbox" name="addshop" value="1">
-            </div>
-        </div>
-
-
-        <div class="form-group">
-            <label for="inputPassword1" class="col-sm-2 control-label">验证码</label>
-            <div class="col-sm-10">
-                <div><img src="{{captcha_src('flat')}}"  onclick="this.src='/captcha/flat?'+Math.random()" alt=""></div>
-                <input  type="text" name="captcha">
-            </div>
-        </div>
-        
-
-        {{--<button id="add" type="button" class="btn btn-primary">点击添加店铺信息</button>--}}
-
-        <div id="info" style="display: none">
+            <div id="info">
             <div class="form-group">
                 <label for="inputUserName3" class="col-sm-2 control-label">商家名字</label>
                 <div class="col-sm-10">
@@ -75,14 +56,13 @@
                     <select class="form-control" name="shop_category_id">
                         <option value="0">请选择</option>
                         @foreach($categories as $category)
-                            <option  value="{{$category->id}}">{{$category->name}}</option>
+                            <option  {{$category->id==old('shop_category_id')?'selected':''}}   value="{{$category->id}}">{{$category->name}}</option>
                         @endforeach
                     </select>
 
                 </div>
 
             </div>
-
 
             <div class="form-group">
                 <label for="inputPassword4" class="col-sm-2 control-label">是否支持</label>
@@ -129,34 +109,20 @@
                 </div>
             </div>
 
-            {{--<div class="form-group">--}}
-            {{--<label for="inputPassword6" class="col-sm-2 control-label">请输入验证码</label>--}}
-            {{--<div class="col-sm-10">--}}
-            {{--<input type="text" name="captcha">--}}
-            {{--<img src="{{captcha_src('falt')}}" alt="" onclick="this.src='/captcha/flat?'+Math.random()" title="点击更换">--}}
-            {{--</div>--}}
-            {{--</div>--}}
+            <div class="form-group">
+            <label for="inputPassword6" class="col-sm-2 control-label">请输入验证码</label>
+            <div class="col-sm-10">
+            <input type="text" name="captcha">
+            <img src="{{captcha_src('falt')}}" alt="" onclick="this.src='/captcha/flat?'+Math.random()" title="点击更换">
+            </div>
+            </div>
 
         </div>
 
         <div class="form-group">
             <div class="col-sm-offset-2 col-sm-10">
-                <button type="submit" class="btn btn-primary">发布</button>
+                <button type="submit" class="btn btn-primary btn-block">发布</button>
             </div>
         </div>
     </form>
 @endsection
-@section('js')
-    <script>
-        $("#add").click(function(){
-            var info=$("#info").css('display');
-
-            if(info=='none'){
-                $("#info").css('display','block')
-            }else{
-                $("#info").css('display','none')
-            }
-        });
-    </script>
-@endsection
-

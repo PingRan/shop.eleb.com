@@ -1,11 +1,13 @@
 @extends('default')
 @section('content')
-    <h1>商家详细信息</h1>
+    <h1>我的店铺信息</h1>
+
+    @foreach($datashop as $shop)
+    <h3>店铺名字:{{$shop->shop_name}}</h3>
+    <a class="btn btn-info" href="{{route('menucategories.index',['shop_id'=>$shop->id])}}">菜品分类</a>
+    <a class="btn btn-info" href="{{route('menus.index',['shop_id'=>$shop->id])}}">店铺菜品</a>
+    <a class="btn btn-info" href="{{route('shop.edit',['shop'=>$shop])}}">修改店铺信息</a>
     <table class="table table-striped table-hover table-bordered">
-        <tr>
-            <td>店铺名字</td>
-            <td>{{$shop->shop_name}}</td>
-        </tr>
         <tr>
             <td>店铺图片</td>
             <td><img width="50px;" src="{{$shop->shop_img}}" alt=""></td>
@@ -73,10 +75,11 @@
         </tr>
 
         <tr>
-            <td>状态:1正常,0待审核,-1禁用</td>
+            <td>状态</td>
             <td>{{$shop->status?($shop->status==1?'正常':'禁用'):'待审核'}}</td>
         </tr>
 
 
     </table>
+    @endforeach
 @endsection

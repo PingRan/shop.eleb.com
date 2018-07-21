@@ -1,15 +1,33 @@
 @extends('default')
 @section('content')
-    <h1>某点的菜品</h1>
-    <form action="{{route('menus.index')}}" method="get">
-        <select name="category_id" id="">
-            <option value="">请选择分类</option>
-            @foreach($menucategories as $menucatory)
-            <option {{$menucatory->id==$category_id?'selected':''}} value="{{$menucatory->id}}">{{$menucatory->name}}</option>
-            @endforeach
-        </select>
-        <button type="submit">搜索</button>
+    {{--<h1>{{$menucategories[0]->shop->shop_name}}菜品列表</h1>--}}
+
+    <form class="navbar-form" method="get" action="{{route('menus.index')}}">
+
+        <div class="form-group">
+
+            <select name="category_id" class="form-control">
+                <option value="">请选择分类</option>
+                @foreach($menucategories as $menucatory)
+                    <option {{$menucatory->id==$category_id?'selected':''}} value="{{$menucatory->id}}">{{$menucatory->name}}</option>
+                @endforeach
+            </select>
+          <input type="hidden" name="shop_id" value="{{$menucatory->shop_id}}">
+        </div>
+
+        <div class="form-group">
+            <input type="number" class="form-control" name="min_price" placeholder="起始价格">-
+        </div>
+        <div class="form-group">
+            <input type="number" class="form-control" name="max_price" placeholder="结束价格">
+        </div>
+
+
+
+        <button type="submit" class="btn btn-default">搜索</button>
     </form>
+
+    <a class="btn btn-info btn-block" href="{{route('menus.create')}}">添加菜品</a>
     <table class="table table-striped table-hover">
         <tr class="success">
             <th>菜品id</th>

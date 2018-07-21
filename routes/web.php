@@ -11,14 +11,11 @@
 |
 */
 
-Route::get('/', function () {
-    return view('welcome');
-});
 Route::get('shop/reg','ShopController@index')->name('shop.reg');
 
 Route::post('shop/reg','ShopController@store')->name('shop.reg');
 
-Route::get('shop/edit','ShopController@edit')->name('shop.edit');
+Route::get('shop/edit/{shop}','ShopController@edit')->name('shop.edit');
 
 Route::post('shop/update/{shop}','ShopController@updateshop')->name('shop.update');
 

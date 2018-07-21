@@ -80,19 +80,9 @@
             </div>
         </div>
 
-        {{--<div class="form-group">--}}
-        {{--<label for="inputPassword6" class="col-sm-2 control-label">请输入验证码</label>--}}
-        {{--<div class="col-sm-10">--}}
-        {{--<input type="text" name="captcha">--}}
-        {{--<img src="{{captcha_src('falt')}}" alt="" onclick="this.src='/captcha/flat?'+Math.random()" title="点击更换">--}}
-        {{--</div>--}}
-        {{--</div>--}}
-
-        {{--</div>--}}
-
         <div class="form-group">
             <div class="col-sm-offset-2 col-sm-10">
-                <button type="submit" class="btn btn-primary">修改</button>
+                <button type="submit" class="btn btn-primary btn-block">修改</button>
             </div>
         </div>
     </form>

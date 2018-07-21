@@ -1,6 +1,9 @@
 @extends('default')
 @section('content')
-    <h1>某点的菜品分类</h1>
+
+    <h1>菜品分类</h1>
+    {{--<a class="btn btn-info" href="{{route('menus.index')}}">{{$menucategories[0]->shop->shop_name}}店铺菜品</a>--}}
+
     <table class="table table-striped table-hover">
         <tr class="success">
             <th>菜品分类id</th>
@@ -13,12 +16,12 @@
         @foreach($menucategories as $menucategory)
             <tr>
                 <td>{{$menucategory->id}}</td>
-                <td>{{$menucategory->name}}</td>
+                <td><a href="{{route('menus.index',['category_id'=>$menucategory->id,'shop_id'=>$menucategory->shop_id])}}">{{$menucategory->name}}</a></td>
                 <td>{{$menucategory->shop_id}}</td>
                 <td>{{$menucategory->description}}</td>
                 <td>{{$menucategory->is_selected?'是':'否'}}
                     @if(!$menucategory->is_selected)
-                    <a href="{{route('selected',['menucategory'=>$menucategory])}}">设置为默认菜品分类</a>
+                    <a class="btn btn-info" href="{{route('selected',['menucategory'=>$menucategory])}}">设为默认菜品分类</a>
                     @endif
                 </td>
                 <td>
@@ -31,6 +34,7 @@
             </tr>
         @endforeach
     </table>
+    <a class="btn btn-info btn-block" href="{{route('menucategories.create')}}">添加菜品分类</a>
 @endsection
 
 @section('js')
@@ -64,6 +68,8 @@
             });
 
         })
+
+
 
 
     </script>

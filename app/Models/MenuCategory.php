@@ -13,4 +13,10 @@ class MenuCategory extends Model
     {
         return $this->hasMany(Menu::class,'category_id','id');
     }
+
+
+    public function shop()
+    {
+        return $this->belongsTo(Shop::class,'shop_id','id');
+    }
 }

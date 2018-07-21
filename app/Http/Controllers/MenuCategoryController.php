@@ -17,9 +17,14 @@ class MenuCategoryController extends Controller
         ]);
     }
 
-    public function index()
+    public function index(Request $request)
     {
-        $menucategories=MenuCategory::all();
+
+        $shop_id=$request->shop_id;
+
+        session(['shop_id'=>$shop_id]);
+
+        $menucategories=MenuCategory::where('shop_id',$shop_id)->get();
 
         return view('menucategory.index',compact('menucategories'));
     }
@@ -31,11 +36,13 @@ class MenuCategoryController extends Controller
 
     public function store(Request $request)
     {
+
+        $shop_id=session('shop_id');
         $this->validate($request,
             [
-                'name'=>'required|max:20|unique:menu_categories',
+                'name'=>['required','max:20','unique:menu_categories'],
                 'description'=>'required|max:150',
-                'is_selected'=>'unique:menu_categories'
+                'is_selected'=>[Rule::unique('menu_categories')->where('shop_id',$shop_id)],
             ],
             [
                'name.required'=>'菜品分类名字不能为空',
@@ -48,11 +55,11 @@ class MenuCategoryController extends Controller
         );
         $request['type_accumulation']=uniqid();
 
-        $shop_id=Auth::user()->shop_id;
+        $shop_id=session('shop_id');
 
         $request['shop_id']=$shop_id;
 
-        $is_selected=MenuCategory::where('is_selected',1)->first();
+        $is_selected=MenuCategory::where('is_selected',1)->where('shop_id',$shop_id)->first();
 
         if(!$is_selected&&!$request->is_selected){
             session()->flash('danger','请设置为默认菜品分类');
@@ -64,7 +71,7 @@ class MenuCategoryController extends Controller
 
         session()->flash('success','添加成功');
 
-        return redirect()->route('menucategories.index');
+        return redirect()->route('menucategories.index',['shop_id'=>$shop_id]);
     }
 
     public function edit(MenuCategory $menucategory)
@@ -89,18 +96,14 @@ class MenuCategoryController extends Controller
                 'is_selected.unique'=>'已存在默认菜品分类',
             ]
         );
-        $shop_id=Auth::user()->shop_id;
-
-        $request['shop_id']=$shop_id;
 
         $menucategory->update(['name'=>$request->name,'description'=>$request->description]);
 
         session()->flash('success','修改成功');
 
-        return redirect()->route('menucategories.index');
+        return redirect()->route('menucategories.index',['shop_id'=>session('shop_id')]);
 
     }
-
 
     public function destroy(MenuCategory $menucategory)
     {
@@ -133,12 +136,13 @@ class MenuCategoryController extends Controller
 
             return redirect()->route('menucategories.index');
         }
-       MenuCategory::where('is_selected',1)->update(['is_selected'=>0]);
+
+       MenuCategory::where('is_selected',1)->where('shop_id',$menucategory->shop_id)->update(['is_selected'=>0]);
 
        $menucategory->update(['is_selected'=>1]);
 
         session()->flash('success','设置菜品分类成功');
 
-       return redirect()->route('menucategories.index');
+       return redirect()->route('menucategories.index',['shop_id'=>session('shop_id')]);
     }
 }
