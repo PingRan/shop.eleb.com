@@ -6,39 +6,11 @@
 @section('web.js')
     <script type="text/javascript" src="/webuploader/webuploader.js"></script>
 @endsection
+
 @section('content')
     @include('default._errors')
-    <form class="form-horizontal" action="{{route('shop.reg')}}" method="post" enctype="multipart/form-data">
+    <form class="form-horizontal" action="{{route('saveshop',['id'=>$user_id])}}" method="post" enctype="multipart/form-data">
 
-        <div class="form-group">
-            <label for="inputPassword7" class="col-sm-2 control-label">账号</label>
-            <div class="col-sm-10">
-                <input type="text" class="form-control" name="name" value="{{old('name')}}">
-            </div>
-        </div>
-
-        <div class="form-group">
-            <label for="inputPassword7" class="col-sm-2 control-label">email</label>
-            <div class="col-sm-10">
-                <input type="text"   class="form-control" name="email" value="{{old('email')}}">
-            </div>
-        </div>
-
-        <div class="form-group">
-            <label for="inputPassword7" class="col-sm-2 control-label">密码</label>
-            <div class="col-sm-10">
-                <input  class="form-control" type="password" name="password">
-            </div>
-        </div>
-
-        <div class="form-group">
-            <label for="inputPassword7" class="col-sm-2 control-label">确认密码</label>
-            <div class="col-sm-10">
-                <input  class="form-control"  type="password" name="password_confirmation">
-            </div>
-        </div>
-
-            <div id="info">
             <div class="form-group">
                 <label for="inputUserName3" class="col-sm-2 control-label">商家名字</label>
                 <div class="col-sm-10">
@@ -47,21 +19,20 @@
             </div>
             {{ csrf_field() }}
 
+        <div class="form-group">
+            <label for="inputPassword7" class="col-sm-2 control-label">logo</label>
+            <div class="col-sm-10">
 
-            <div class="form-group">
-                <label for="inputPassword7" class="col-sm-2 control-label">logo</label>
-                <div class="col-sm-10">
-
-                    <div id="uploader-demo">
-                        <!--用来存放item-->
-                        <div id="fileList" class="uploader-list"></div>
-                        <div id="filePicker">选择图片</div>
-                        <img id="img" src="" alt="">
-                    </div>
-                    <input id="img_url" type="hidden" name="shop_img">
-
+                <div id="uploader-demo">
+                    <!--用来存放item-->
+                    <div id="fileList" class="uploader-list"></div>
+                    <div id="filePicker">选择图片</div>
+                    <img id="img" src="" alt="">
                 </div>
+                <input id="img_url" type="hidden" name="shop_img">
+
             </div>
+        </div>
 
 
             <div class="form-group">
@@ -71,7 +42,7 @@
                     <select class="form-control" name="shop_category_id">
                         <option value="0">请选择</option>
                         @foreach($categories as $category)
-                            <option  {{$category->id==old('shop_category_id')?'selected':''}}   value="{{$category->id}}">{{$category->name}}</option>
+                            <option  {{$category->id==old('shop_category_id')?'selected':''}}  value="{{$category->id}}">{{$category->name}}</option>
                         @endforeach
                     </select>
 
@@ -90,8 +61,6 @@
                     <input type="checkbox" name="zhun" value="1">准标记
                 </div>
             </div>
-
-
 
             <div class="form-group">
                 <label for="inputPassword4" class="col-sm-2 control-label">起送金额</label>
@@ -125,14 +94,43 @@
             </div>
 
             <div class="form-group">
-            <label for="inputPassword6" class="col-sm-2 control-label">请输入验证码</label>
-            <div class="col-sm-10">
-            <input type="text" name="captcha">
-            <img src="{{captcha_src('falt')}}" alt="" onclick="this.src='/captcha/flat?'+Math.random()" title="点击更换">
-            </div>
+                <label for="inputPassword7" class="col-sm-2 control-label">添加账号</label>
+                <div class="col-sm-10">
+                    <input  id="add" type="checkbox" name="adduser" value="1">
+                </div>
             </div>
 
-        </div>
+
+        <div id="info" style="display: none">
+
+            <div class="form-group">
+                <label for="inputPassword7" class="col-sm-2 control-label">账号</label>
+                <div class="col-sm-10">
+                    <input type="text" class="form-control" name="name" value="{{old('name')}}">
+                </div>
+            </div>
+
+            <div class="form-group">
+                <label for="inputPassword7" class="col-sm-2 control-label">email</label>
+                <div class="col-sm-10">
+                    <input type="text" class="form-control" name="email" value="{{old('email')}}">
+                </div>
+            </div>
+
+            <div class="form-group">
+                <label for="inputPassword7" class="col-sm-2 control-label">密码</label>
+                <div class="col-sm-10">
+                    <input class="form-control" type="password" name="password">
+                </div>
+            </div>
+
+            <div class="form-group">
+                <label for="inputPassword7" class="col-sm-2 control-label">确认密码</label>
+                <div class="col-sm-10">
+                    <input class="form-control" type="password" name="password_confirmation">
+                </div>
+            </div>
+
 
         <div class="form-group">
             <div class="col-sm-offset-2 col-sm-10">
@@ -141,9 +139,18 @@
         </div>
     </form>
 @endsection
-
 @section('js')
     <script>
+        $("#add").click(function(){
+            var info=$("#info").css('display');
+
+            if(info=='none'){
+                $("#info").css('display','block')
+            }else{
+                $("#info").css('display','none')
+            }
+        });
+
         var uploader = WebUploader.create({
 
             // 选完文件后，是否自动上传。
@@ -179,5 +186,7 @@
         });
 
     </script>
+
+
 
 @endsection

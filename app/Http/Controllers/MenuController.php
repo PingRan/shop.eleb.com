@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Models\Menu;
 use App\Models\MenuCategory;
+use App\Models\Shop;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Storage;
@@ -21,38 +22,55 @@ class MenuController extends Controller
     {
          $shop_id=$request->shop_id;
 
+        $shop_status=Shop::find($shop_id)->status;
+
+        if($shop_status!=1){
+            session()->flash('danger','该店还未通过审核，请耐心等待');
+            return redirect()->route('shopshow');
+        }
+
          session(['shop_id'=>$shop_id]);
 
         $menucategories=MenuCategory::where('shop_id',$shop_id)->get();
-
 
         $condition=[];//存储搜索条件.
 
         $condition[]=['shop_id',$shop_id];
 
+        $where['shop_id']=$shop_id;
+
         $category_id=$request->category_id;
 
        if($category_id){
            $condition[]=['category_id',$category_id];
+           $where['category_id']=$category_id;
        }
 
-       if($request->min_price&&$request->max_price){
-           $condition[]=['goods_price','>=',$request->min_price];
-           $condition[]=['goods_price','<=',$request->max_price];
-       }
+        if($request->goods_name){
+            $condition[]=['goods_name','like',"%{$request->goods_name}%"];
+            $where['goods_name']=$request->goods_name;
+        }
 
         if($request->max_price){
             $condition[]=['goods_price','<=',$request->max_price];
+            $where['max_price']=$request->max_price;
         }
 
         if($request->min_price){
             $condition[]=['goods_price','>=',$request->min_price];
+            $where['min_price']=$request->min_price;
         }
 
+        $menus=Menu::where($condition)->paginate(6);
 
-        $menus=Menu::where($condition)->paginate(10);
 
-       return view('menu.index',compact('menus','menucategories','category_id'));
+        //授权只能看自己店铺下的菜品
+        foreach ($menus as $menu){
+
+            $this->authorize('yourmenu',$menu);
+        }
+
+       return view('menu.index',compact('menus','menucategories','where'));
     }
 
     public function create()
@@ -74,7 +92,7 @@ class MenuController extends Controller
                'goods_price'=>'required|numeric',
                'description'=>'required|max:150',
                'tips'=>'required|max:50',
-               'goods_img'=>['required', 'dimensions:min_width=1,min_height=1'],
+               'goods_img'=>['required'],
            ],
            [
              'goods_name.required'=>'菜品名字不能为空',
@@ -87,26 +105,34 @@ class MenuController extends Controller
                'description.max'=>'菜品简介在150个字以内',
                'tips.required'=>'菜品提示不能为空',
                'tips.max'=>'菜品提示在50个字以内',
-               'goods_img.required'=>'菜品图片不能为空',
-               'goods_img.dimensions'=>'请上传菜品图片',
+               'goods_img.required'=>'请上传菜品图片',
            ]
        );
 
-       if($request->goods_img){
+        if($request->goods_img){
 
-        $fileName=$request->goods_img->store('public/goods_img');
-
-        $request['goods_img']=url(Storage::url($fileName));
+            $request['goods_img']=$request->goods_img;
 
        }else{
 
-           $request['goods_img']='0';
+           $request['goods_img']='http://elebran.oss-cn-shenzhen.aliyuncs.com/elebran/upload/2p36m7e7woK8YwknXkS5H039WIVPUmUhckeKSkdT.jpeg';
        }
-
 
        $request['shop_id']=session('shop_id');
 
-       Menu::create($request->input());
+        //随机生成月销量，
+        $request['month_sales']=mt_rand(500,2000);
+
+        //随机生成评分数量，
+        $request['rating_count']=mt_rand(500,2000);
+
+        //随机生成满意度评分
+
+        $request['satisfy_rate']=mt_rand(1,10);
+        //随机生成菜品评分
+        $request['rating']=mt_rand(1,10);
+
+        Menu::create($request->input());
 
        session()->flash('success','菜品添加成功');
 
@@ -115,6 +141,7 @@ class MenuController extends Controller
 
     public function edit(Menu $menu)
     {
+        $this->authorize('yourmenu',$menu);
         $shop_id=session('shop_id');
 
         $menucategories=MenuCategory::where('shop_id',$shop_id)->get();
@@ -131,7 +158,7 @@ class MenuController extends Controller
                 'goods_price'=>'required|numeric',
                 'description'=>'required|max:150',
                 'tips'=>'required|max:50',
-                'goods_img'=>['dimensions:min_width=1,min_height=1'],
+                'goods_img'=>['required'],
             ],
             [
                 'goods_name.required'=>'菜品名字不能为空',
@@ -144,49 +171,48 @@ class MenuController extends Controller
                 'description.max'=>'菜品简介在150个字以内',
                 'tips.required'=>'菜品提示不能为空',
                 'tips.max'=>'菜品提示在50个字以内',
-                'goods_img.required'=>'菜品图片不能为空',
-                'goods_img.dimensions'=>'请上传菜品图片',
+                'goods_img.required'=>'请上传菜品图片',
             ]
         );
 
         $data=['goods_name'=>$request->goods_name,'category_id'=>$request->category_id,'goods_price'=>$request->goods_price,'tips'=>$request->tips,'description'=>$request->description];
 
-        if($request->goods_img){
-            $fileName=$request->goods_img->store('public/goods_img');
-            $data['goods_img']=url(Storage::url($fileName));
+        //随机生成月销量，
+        $data['month_sales']=mt_rand(500,2000);
 
+        //随机生成评分数量，
+        $data['rating_count']=mt_rand(500,2000);
+
+        //随机生成满意度评分
+
+        $data['satisfy_rate']=mt_rand(1,10);
+        //随机生成菜品评分
+        $data['rating']=mt_rand(1,10);
+
+        if($request->goods_img) {
+
+            $data['goods_img'] =$request->goods_img;
+
+            $menu->update($data);
+
+            session()->flash('success', '菜品修改成功');
+
+            return redirect()->route('menus.index', ['shop_id' => session('shop_id')]);
         }
-
-        $menu->update($data);
-
-        session()->flash('success','菜品修改成功');
-
-        return redirect()->route('menus.index',['shop_id'=>session('shop_id')]);
-
 
     }
 
-
     public function destroy(Menu $menu)
     {
+        $this->authorize('yourmenu',$menu);
        $menu->delete();
 
        echo '删除成功';
     }
 
-
-//    public function showmenus(Request $request)
-//    {
-//        $category_id=$request->category_id;
-//
-//        $menus=Menu::where('category_id',$category_id)->get('goods_name');
-//
-//        return view('menu.showmenus',compact('menus'));
-//    }
-
-
     public function show(Menu $menu)
     {
+        $this->authorize('yourmenu',$menu);
         return view('menu.show',compact('menu'));
     }
 }

@@ -19,7 +19,13 @@
                     <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false">我要开店<span class="caret"></span></a>
                     <ul class="dropdown-menu">
                         <li><a href="{{route('shop.reg')}}">注册店铺信息</a></li>
-                        {{--<li><a href="{{route('shops.index')}}">商店列表</a></li>--}}
+                    </ul>
+                </li>
+
+                <li class="dropdown">
+                    <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false">查看eleb活动<span class="caret"></span></a>
+                    <ul class="dropdown-menu">
+                        <li><a href="{{route('activity.index')}}">eleb活动</a></li>
                     </ul>
                 </li>
 
@@ -28,34 +34,12 @@
                     <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false">店铺<span class="caret"></span></a>
                     <ul class="dropdown-menu">
                         <li><a href="{{route('shopshow')}}">我的店铺信息</a></li>
-                        {{--<li><a href="{{route('menucategories.create')}}">添加菜品分类</a></li>--}}
-                        {{--<li><a href="{{route('menus.create')}}">添加菜品</a></li>--}}
+                        <li><a href="{{route('addshop',['id'=>Auth()->id()])}}">开分店</a></li>
                     </ul>
                 </li>
                 @endif
-
-                {{--<li class="dropdown">--}}
-                    {{--<a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false">管理员<span class="caret"></span></a>--}}
-                    {{--<ul class="dropdown-menu">--}}
-                        {{--<li><a href="{{route('admins.index')}}">管理员列表</a></li>--}}
-                        {{--<li><a href="{{route('admins.create')}}">添加管理员</a></li>--}}
-                    {{--</ul>--}}
-                {{--</li>--}}
-
-                {{--<li class="dropdown">--}}
-                    {{--<a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false">商家账号<span class="caret"></span></a>--}}
-                    {{--<ul class="dropdown-menu">--}}
-                        {{--<li><a href="{{route('users.index')}}">账号列表</a></li>--}}
-                        {{--<li><a href="{{route('resetpass')}}">重置商家账号</a></li>--}}
-                    {{--</ul>--}}
-                {{--</li>--}}
             </ul>
-            {{--<form class="navbar-form navbar-left" method="get" action="">--}}
-                {{--<div class="form-group">--}}
-                    {{--<input type="text" class="form-control" placeholder="标题或者内容" name="keywords">--}}
-                {{--</div>--}}
-                {{--<button type="submit" class="btn btn-default">搜索</button>--}}
-            {{--</form>--}}
+
             <ul class="nav navbar-nav navbar-right">
                 @guest
                 <li><a href="{{route('login')}}">登录</a></li>

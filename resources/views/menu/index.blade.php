@@ -1,18 +1,17 @@
 @extends('default')
 @section('content')
-    {{--<h1>{{$menucategories[0]->shop->shop_name}}菜品列表</h1>--}}
+
+    <a class="btn btn-info" href="{{route('menus.create')}}">添加菜品</a>
+    <div>
+        @foreach($menucategories as $menucategory)
+            <a class="btn btn-default" href="{{route('menus.index',['category_id'=>$menucategory->id,'shop_id'=>$menucategory->shop_id])}}">{{$menucategory->name}}</a>
+        @endforeach
+    </div>
 
     <form class="navbar-form" method="get" action="{{route('menus.index')}}">
 
         <div class="form-group">
-
-            <select name="category_id" class="form-control">
-                <option value="">请选择分类</option>
-                @foreach($menucategories as $menucatory)
-                    <option {{$menucatory->id==$category_id?'selected':''}} value="{{$menucatory->id}}">{{$menucatory->name}}</option>
-                @endforeach
-            </select>
-          <input type="hidden" name="shop_id" value="{{$menucatory->shop_id}}">
+            <input type="text" class="form-control" name="goods_name" placeholder="菜名" value="">
         </div>
 
         <div class="form-group">
@@ -21,19 +20,19 @@
         <div class="form-group">
             <input type="number" class="form-control" name="max_price" placeholder="结束价格">
         </div>
-
-
-
+        <input type="hidden" name="shop_id" value="{{$menucategory->shop_id}}">
+        <input type="hidden" name="category_id" value="{{isset($where['category_id'])?$where['category_id']:''}}">
         <button type="submit" class="btn btn-default">搜索</button>
     </form>
 
-    <a class="btn btn-info btn-block" href="{{route('menus.create')}}">添加菜品</a>
     <table class="table table-striped table-hover">
         <tr class="success">
             <th>菜品id</th>
             <th>菜品名字</th>
             <th>菜品分类</th>
             <th>菜品价格</th>
+            <th>菜品评分</th>
+            <th>月销量</th>
             <th>操作</th>
         </tr>
         @foreach($menus as $menu)
@@ -42,6 +41,8 @@
                 <td>{{$menu->goods_name}}</td>
                 <td>{{$menu->category->name}}</td>
                 <td>{{$menu->goods_price}}</td>
+                <td>{{$menu->rating}}分</td>
+                <td>{{$menu->month_sales}}份</td>
                 <td>
                         <a class="test" href="{{route('menus.edit',['menu'=>$menu->id])}}"><span
                                     class="glyphicon glyphicon-edit"></span></a>
@@ -54,7 +55,7 @@
         @endforeach
     </table>
 
-    {{$menus->appends(['category_id'=>$category_id])->links()}}
+    {{$menus->appends($where)->links()}}
 @endsection
 
 @section('js')

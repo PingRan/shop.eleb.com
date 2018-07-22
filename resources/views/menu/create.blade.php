@@ -1,4 +1,12 @@
 @extends('default')
+@section('css')
+    <link rel="stylesheet" type="text/css" href="/webuploader/webuploader.css">
+@endsection
+
+@section('web.js')
+    <script type="text/javascript" src="/webuploader/webuploader.js"></script>
+@endsection
+
 @section('content')
     @include('default._errors')
     <form class="form-horizontal" action="{{route('menus.store')}}" method="post" enctype="multipart/form-data">
@@ -9,14 +17,25 @@
             </div>
         </div>
 
+        {{--<div id="uploader-demo">--}}
+            {{--<!--用来存放item-->--}}
+            {{--<div id="fileList" class="uploader-list"></div>--}}
+            {{--<div id="filePicker">选择图片</div>--}}
+            {{--<img id="img" src="" alt="">--}}
+        {{--</div>--}}
 
         <div class="form-group">
-            <label for="inputPassword3" class="col-sm-2 control-label">菜品图片</label>
+            <label for="inputUserName3" class="col-sm-2 control-label">菜品图片</label>
             <div class="col-sm-10">
-                <input type="file" name="goods_img">
+                <div id="uploader-demo">
+                    <!--用来存放item-->
+                    <div id="fileList" class="uploader-list"></div>
+                    <div id="filePicker">选择图片</div>
+                    <img id="img" src="" alt="">
+                </div>
+                <input id="img_url" type="hidden" name="goods_img">
             </div>
         </div>
-
 
         <div class="form-group">
         <label for="inputUserName3" class="col-sm-2 control-label">菜品分类</label>
@@ -35,21 +54,21 @@
         <div class="form-group">
             <label for="inputPassword3" class="col-sm-2 control-label">菜品价格</label>
             <div class="col-sm-10">
-                <input type="number" name="goods_price">
+                <input type="number" name="goods_price" value="{{old('goods_price')}}">
             </div>
         </div>
 
         <div class="form-group">
             <label for="inputPassword3" class="col-sm-2 control-label">提示信息</label>
             <div class="col-sm-10">
-                <input type="text" name="tips">
+                <input type="text" name="tips" value="{{old('tips')}}">
             </div>
         </div>
 
         <div class="form-group">
             <label for="inputPassword3" class="col-sm-2 control-label">描述</label>
             <div class="col-sm-10">
-                <textarea class="form-control" name="description" id="" cols="30" rows="10"></textarea>
+                <textarea class="form-control" name="description" id="" cols="30" rows="10">{{old('description')}}</textarea>
             </div>
         </div>
 
@@ -60,4 +79,43 @@
             </div>
         </div>
     </form>
+@endsection
+@section('js')
+    <script>
+        var uploader = WebUploader.create({
+
+            // 选完文件后，是否自动上传。
+            auto: true,
+
+            // swf文件路径
+//            swf: BASE_URL + '/js/Uploader.swf',
+
+            // 文件接收服务端。
+            server: '{{route('uploader')}}',
+
+            // 选择文件的按钮。可选。
+            // 内部根据当前运行是创建，可能是input元素，也可能是flash.
+            pick: '#filePicker',
+
+            // 只允许选择图片文件。
+            accept: {
+                title: 'Images',
+                extensions: 'gif,jpg,jpeg,bmp,png',
+                mimeTypes: 'image/*'
+            },
+            formData:{
+                _token:'{{csrf_token()}}',
+            }
+
+        });
+
+        uploader.on( 'uploadSuccess', function(file,responese) {
+
+           var url=responese.fileurl;
+            $("#img").attr('src',url);
+            $("#img_url").val(url);
+        });
+
+    </script>
+
 @endsection

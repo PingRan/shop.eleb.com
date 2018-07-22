@@ -4,8 +4,7 @@ namespace App\Models;
 
 use Illuminate\Database\Eloquent\Model;
 
-class ShopUser extends Model
+class Activity extends Model
 {
     //
-    protected $fillable=['user_id','shop_id'];
 }

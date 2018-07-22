@@ -3,13 +3,14 @@
 namespace App\Http\Controllers;
 
 use App\Models\MenuCategory;
+use App\Models\Shop;
+use App\Models\ShopUser;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Validation\Rule;
 
 class MenuCategoryController extends Controller
 {
-    //
     public function __construct()
     {
         $this->middleware('auth',[
@@ -22,9 +23,21 @@ class MenuCategoryController extends Controller
 
         $shop_id=$request->shop_id;
 
+        $shop_status=Shop::find($shop_id)->status;
+        if($shop_status!=1){
+            session()->flash('danger','该店还未通过审核，请耐心等待');
+            return redirect()->route('shopshow');
+        }
+
         session(['shop_id'=>$shop_id]);
 
         $menucategories=MenuCategory::where('shop_id',$shop_id)->get();
+
+        //授权只能看自己店铺下的菜品分类
+        foreach ($menucategories as $menucategory){
+
+            $this->authorize('yourshop',$menucategory);
+        }
 
         return view('menucategory.index',compact('menucategories'));
     }
@@ -76,6 +89,7 @@ class MenuCategoryController extends Controller
 
     public function edit(MenuCategory $menucategory)
     {
+      $this->authorize('yourshop',$menucategory);
       return view('menucategory.edit',compact('menucategory'));
     }
 
@@ -107,7 +121,7 @@ class MenuCategoryController extends Controller
 
     public function destroy(MenuCategory $menucategory)
     {
-
+        $this->authorize('yourshop',$menucategory);
         $id=$menucategory->id;
 
         $a=MenuCategory::where('id',$id)->withCount('menus')->first();
@@ -131,6 +145,7 @@ class MenuCategoryController extends Controller
 
     public function is_selected(MenuCategory $menucategory)
     {
+        $this->authorize('yourshop',$menucategory);
         if($menucategory->is_selected){
             session()->flash('danger','已经是默认菜品分类了');
 

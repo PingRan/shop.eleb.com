@@ -19,13 +19,17 @@ Route::get('shop/edit/{shop}','ShopController@edit')->name('shop.edit');
 
 Route::post('shop/update/{shop}','ShopController@updateshop')->name('shop.update');
 
-Route::get('shop','IndexController@home')->name('shop.home');
+Route::get('addshop/{id}','ShopController@addshop')->name('addshop');
+
+Route::post('addshop/{id}','ShopController@saveshop')->name('saveshop');
 
 Route::get('login','ShopController@login')->name('login');
 
 Route::post('shop/login','ShopController@check')->name('shop.login');
 
 Route::get('shop/loginout','ShopController@loginout')->name('shop.loginout');
+
+Route::get('shop','IndexController@home')->name('shop.home');
 
 Route::get('shop/uppassword','ShopController@uppassword')->name('shop.uppassword');
 
@@ -39,3 +43,13 @@ Route::get('selected/{menucategory}','MenuCategoryController@is_selected')->name
 
 Route::resource('menus','MenuController');
 
+Route::get('activity','ActivityController@index')->name('activity.index');
+
+Route::get('activity/{id}','ActivityController@show')->name('activity.show');
+
+Route::post('uploader',function(){
+      $store=\Illuminate\Support\Facades\Storage::disk('oss');
+      $fileName=$store->putFile('elebran/upload',request()->file('file'));
+      $fileurl=$store->url($fileName);
+      return ['fileurl'=>$fileurl];
+})->name('uploader');
