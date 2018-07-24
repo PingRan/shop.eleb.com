@@ -75,7 +75,7 @@ class ShopController extends Controller
         $request['zhun'] = $request->zhun??0;
 
 
-        $request['shop_rating'] = 5;
+        $request['shop_rating'] = mt_rand(1,4).'.'.mt_rand(0,9);
 
         $request['status'] = 0;
 
@@ -140,7 +140,7 @@ class ShopController extends Controller
                 session()->flash('danger', '该账号未激活或商铺还未通过审核');
                 return back()->withInput();
             }
-            session()->flash('登录成功');
+            session()->flash('success','登录成功');
             return redirect()->route('shop.home');
 
         } else {
@@ -273,7 +273,7 @@ class ShopController extends Controller
         $data['piao'] = $request->piao??0;
         $data['zhun'] = $request->zhun??0;
 
-        $data['shop_rating'] =mt_rand(1,5);//商店评分要优化
+        $data['shop_rating'] =mt_rand(1,4).'.'.mt_rand(0,9);//商店评分要优化
 
         if ($request->notice) {
             $data['notice'] = $request->notice;
@@ -365,7 +365,7 @@ class ShopController extends Controller
             $request['piao'] = $request->piao??0;
             $request['zhun'] = $request->zhun??0;
 
-            $request['shop_rating'] = 5;
+            $request['shop_rating'] = mt_rand(1,4).'.'.mt_rand(0,9);
 
             $request['status'] =0;
 
@@ -429,7 +429,7 @@ class ShopController extends Controller
             $request['piao'] = $request->piao??0;
             $request['zhun'] = $request->zhun??0;
 
-            $request['shop_rating'] = 5;
+            $request['shop_rating'] = mt_rand(1,4).'.'.mt_rand(0,9);
 
             $request['status'] =0;
 

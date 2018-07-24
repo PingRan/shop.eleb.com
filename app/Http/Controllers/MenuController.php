@@ -128,9 +128,11 @@ class MenuController extends Controller
 
         //随机生成满意度评分
 
-        $request['satisfy_rate']=mt_rand(1,10);
+        $request['satisfy_rate']=mt_rand(1,100);;
         //随机生成菜品评分
-        $request['rating']=mt_rand(1,10);
+        $request['rating']=mt_rand(1,9).'.'.mt_rand(0,9);
+        //随机生成满意度数量
+        $request['rating']=mt_rand(10,1000);
 
         Menu::create($request->input());
 
@@ -185,10 +187,11 @@ class MenuController extends Controller
 
         //随机生成满意度评分
 
-        $data['satisfy_rate']=mt_rand(1,10);
+        $data['satisfy_rate']=mt_rand(1,100);
         //随机生成菜品评分
-        $data['rating']=mt_rand(1,10);
-
+        $data['rating']=mt_rand(1,9).'.'.mt_rand(0,9);
+        //随机生成满意度数量
+        $data['rating']=mt_rand(10,1000);
         if($request->goods_img) {
 
             $data['goods_img'] =$request->goods_img;

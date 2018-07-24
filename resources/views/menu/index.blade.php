@@ -1,24 +1,25 @@
-@extends('default')
-@section('content')
-
-    <a class="btn btn-info" href="{{route('menus.create')}}">添加菜品</a>
+@extends('Mdefault')
+@section('left')
+    <a class="btn btn-info btn-block" href="{{route('menus.create')}}">添加菜品</a>
     <div>
         @foreach($menucategories as $menucategory)
-            <a class="btn btn-default" href="{{route('menus.index',['category_id'=>$menucategory->id,'shop_id'=>$menucategory->shop_id])}}">{{$menucategory->name}}</a>
+            <a class="btn btn-default btn-block" href="{{route('menus.index',['category_id'=>$menucategory->id,'shop_id'=>$menucategory->shop_id])}}">{{$menucategory->name}}</a>
         @endforeach
     </div>
+@endsection
+@section('content')
 
     <form class="navbar-form" method="get" action="{{route('menus.index')}}">
 
         <div class="form-group">
-            <input type="text" class="form-control" name="goods_name" placeholder="菜名" value="">
+            <input type="text" class="form-control" name="goods_name" placeholder="菜名" value="{{isset($where['goods_name'])?$where['goods_name']:''}}">
         </div>
 
         <div class="form-group">
-            <input type="number" class="form-control" name="min_price" placeholder="起始价格">-
+            <input type="number" class="form-control" name="min_price" placeholder="起始价格" value="{{isset($where['min_price'])?$where['min_price']:''}}">-
         </div>
         <div class="form-group">
-            <input type="number" class="form-control" name="max_price" placeholder="结束价格">
+            <input type="number" class="form-control" name="max_price" placeholder="结束价格" value="{{isset($where['max_price'])?$where['max_price']:''}}">
         </div>
         <input type="hidden" name="shop_id" value="{{$menucategory->shop_id}}">
         <input type="hidden" name="category_id" value="{{isset($where['category_id'])?$where['category_id']:''}}">
