@@ -7,6 +7,7 @@
     <a class="btn btn-info" href="{{route('menucategories.index',['shop_id'=>$shop->id])}}">菜品分类</a>
     <a class="btn btn-info" href="{{route('menus.index',['shop_id'=>$shop->id])}}">店铺菜品</a>
     <a class="btn btn-info" href="{{route('shop.edit',['shop'=>$shop])}}">修改店铺信息</a>
+    <a class="btn btn-info" href="{{route('orderList',['shop_id'=>$shop->id])}}">查看订单信息</a>
     <table class="table table-striped table-hover table-bordered">
         <tr>
             <td>店铺图片</td>

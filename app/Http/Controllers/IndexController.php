@@ -17,6 +17,8 @@ class IndexController extends Controller
 
         $shops=Shop::where('status',0)->orderBy('created_at','desc')->offset(0)->limit(5)->get();
 
+
+
         return view('index.home',compact('activities','shops'));
 
     }

@@ -45,7 +45,7 @@ Route::resource('menus','MenuController');
 
 Route::get('activity','ActivityController@index')->name('activity.index');
 
-Route::get('activity/{id}','ActivityController@show')->name('activity.show');
+Route::get('activity/{id}','ActivityController@show')->where(['id'=>'\d+'])->name('activity.show');
 
 Route::post('uploader',function(){
       $store=\Illuminate\Support\Facades\Storage::disk('oss');
@@ -53,3 +53,13 @@ Route::post('uploader',function(){
       $fileurl=$store->url($fileName);
       return ['fileurl'=>$fileurl];
 })->name('uploader');
+//获取订单列表
+Route::get('orderList/{shop_id}','OrderController@index')->name('orderList');
+//查看订单详情
+Route::get('showOrder/{order}','OrderController@showOrder')->name('showOrder');
+//取消订单
+Route::get('cancelOrder/{order}','OrderController@cancelOrder')->name('cancelOrder');
+//发货
+Route::get('ship/{order}/{code}','OrderController@Ship')->name('Ship');
+//订单统计
+Route::get('ship/{shop_id}','OrderController@orderCount')->name('orderCount');
