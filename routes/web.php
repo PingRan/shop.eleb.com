@@ -62,4 +62,12 @@ Route::get('cancelOrder/{order}','OrderController@cancelOrder')->name('cancelOrd
 //发货
 Route::get('ship/{order}/{code}','OrderController@Ship')->name('Ship');
 //订单统计
-Route::get('ship/{shop_id}','OrderController@orderCount')->name('orderCount');
+Route::get('orderCount','OrderController@orderCount')->name('orderCount');
+//每月订单统计
+Route::get('orderMonth','OrderController@orderMonth')->name('orderMonth');
+//每天菜品统计
+Route::get('orderMenu','OrderController@orderMenu')->name('orderMenu');
+//每月菜品统计
+Route::get('MonthMenuOrder','OrderController@MonthMenuOrder')->name('MonthMenuOrder');
+Route::get('test','OrderController@test')->name('test');
+

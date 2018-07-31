@@ -30,19 +30,29 @@
    <div class="row">
 
        <div class="col-xs-12">
-           @yield('myinfo')
            @include('default._messages')
            @yield('content')
        </div>
-
    </div>
 
-
     <div class="row">
-        <div class="col-xs-12">
-
+        <div class="col-xs-6">
+            @yield('DayOrder')
+        </div>
+        <div class="col-xs-6">
+            @yield('MonthOrder')
         </div>
     </div>
+
+    <div class="row">
+        <div class="col-xs-6">
+            @yield('DayMenu')
+        </div>
+        <div class="col-xs-6">
+            @yield('MonthMenu')
+        </div>
+    </div>
+
 
 
 </div>
