@@ -2,7 +2,6 @@
 @section('content')
 
     <h1>菜品分类</h1>
-    {{--<a class="btn btn-info" href="{{route('menus.index')}}">{{$menucategories[0]->shop->shop_name}}店铺菜品</a>--}}
 
     <table class="table table-striped table-hover">
         <tr class="success">

@@ -42,6 +42,8 @@ Route::resource('menucategories','MenuCategoryController');
 Route::get('selected/{menucategory}','MenuCategoryController@is_selected')->name('selected');
 
 Route::resource('menus','MenuController');
+//修改菜品的状态
+Route::get('updateStatus/{menu}','MenuController@updateStatus')->name('updateStatus');
 
 Route::get('activity','ActivityController@index')->name('activity.index');
 
@@ -69,5 +71,12 @@ Route::get('orderMonth','OrderController@orderMonth')->name('orderMonth');
 Route::get('orderMenu','OrderController@orderMenu')->name('orderMenu');
 //每月菜品统计
 Route::get('MonthMenuOrder','OrderController@MonthMenuOrder')->name('MonthMenuOrder');
-Route::get('test','OrderController@test')->name('test');
+//抽奖活动列表
+Route::get('events','EventController@index')->name('events.index');
+//查看抽奖活动详情
+Route::get('eventShow/{id}','EventController@eventShow')->name('eventShow');
+//报名
+Route::get('signUp/{event}','EventController@SignUp')->name('signUp');
+//查看抽奖结果
+Route::get('prizeResult/{event}','EventController@prizeResult')->name('prizeResult');
 

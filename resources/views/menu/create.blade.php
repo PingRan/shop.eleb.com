@@ -17,13 +17,6 @@
             </div>
         </div>
 
-        {{--<div id="uploader-demo">--}}
-            {{--<!--用来存放item-->--}}
-            {{--<div id="fileList" class="uploader-list"></div>--}}
-            {{--<div id="filePicker">选择图片</div>--}}
-            {{--<img id="img" src="" alt="">--}}
-        {{--</div>--}}
-
         <div class="form-group">
             <label for="inputUserName3" class="col-sm-2 control-label">菜品图片</label>
             <div class="col-sm-10">
@@ -31,7 +24,7 @@
                     <!--用来存放item-->
                     <div id="fileList" class="uploader-list"></div>
                     <div id="filePicker">选择图片</div>
-                    <img id="img" src="" alt="">
+                    <img width="150px;" id="img" src="" alt="">
                 </div>
                 <input id="img_url" type="hidden" name="goods_img">
             </div>
@@ -69,6 +62,14 @@
             <label for="inputPassword3" class="col-sm-2 control-label">描述</label>
             <div class="col-sm-10">
                 <textarea class="form-control" name="description" id="" cols="30" rows="10">{{old('description')}}</textarea>
+            </div>
+        </div>
+
+
+        <div class="form-group">
+            <label for="inputPassword3" class="col-sm-2 control-label">是否上架</label>
+            <div class="col-sm-10">
+                <input type="checkbox" name="status" value="1">
             </div>
         </div>
 

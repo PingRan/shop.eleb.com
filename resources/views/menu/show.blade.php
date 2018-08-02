@@ -83,6 +83,12 @@
             </td>
         </tr>
 
+        <tr>
+            <td>菜品状态</td>
+            <td>
+                <a class="bg-info btn" href="{{route('updateStatus',['menu'=>$menu])}}">{{$menu->status?'下':'上'}}架</a>
+            </td>
+        </tr>
 
     </table>
 @endsection

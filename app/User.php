@@ -2,6 +2,7 @@
 
 namespace App;
 
+use App\Models\EventUser;
 use App\Models\Shop;
 use Illuminate\Notifications\Notifiable;
 use Illuminate\Foundation\Auth\User as Authenticatable;
@@ -33,5 +34,9 @@ class User extends Authenticatable
     {
         return $this->hasMany(Shop::class,'id','shop_id');
     }
-
+    //关联报名表
+    public function eventUser()
+    {
+        return $this->hasOne(EventUser::class,'user_id','id');
+    }
 }

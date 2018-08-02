@@ -34,6 +34,7 @@
             <th>菜品价格</th>
             <th>菜品评分</th>
             <th>月销量</th>
+            <th>状态</th>
             <th>操作</th>
         </tr>
         @foreach($menus as $menu)
@@ -44,6 +45,9 @@
                 <td>{{$menu->goods_price}}</td>
                 <td>{{$menu->rating}}分</td>
                 <td>{{$menu->month_sales}}份</td>
+                <td>
+                    <a class="btn bg-info" href="{{route('updateStatus',['menu'=>$menu])}}">{{$menu->status?'下':'上'}}架</a>
+                </td>
                 <td>
                         <a class="test" href="{{route('menus.edit',['menu'=>$menu->id])}}"><span
                                     class="glyphicon glyphicon-edit"></span></a>

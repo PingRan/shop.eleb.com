@@ -37,7 +37,7 @@
                     <!--用来存放item-->
                     <div id="fileList" class="uploader-list"></div>
                     <div id="filePicker">选择图片</div>
-                    <img id="img" src="{{$menu->goods_img}}" alt="">
+                    <img id="img" width="150px;" src="{{$menu->goods_img}}" alt="">
                 </div>
                 <input id="img_url" type="hidden" name="goods_img">
             </div>
@@ -66,6 +66,13 @@
             </div>
         </div>
 
+
+        <div class="form-group">
+            <label for="inputPassword3" class="col-sm-2 control-label">是否上架</label>
+            <div class="col-sm-10">
+                <input type="checkbox" {{$menu->status?'checked':''}} name="status" value="1">
+            </div>
+        </div>
 
         <div class="form-group">
             <div class="col-sm-offset-2 col-sm-10">
