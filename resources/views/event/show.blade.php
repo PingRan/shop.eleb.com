@@ -11,8 +11,10 @@
             {!! $prize->description !!}
            @endforeach
     <div>
-     @if(!Auth()->user()->eventUser&&$event->signup_num!=0)
+
+     @if(!Auth()->user()->eventUser->where('events_id',$event->id)->first()&&$event->signup_num!=0)
     <a href="{{route('signUp',['event'=>$event])}}" class="bg-info btn btn-block">报名</a>
      @endif
+
     </div>
 @endsection

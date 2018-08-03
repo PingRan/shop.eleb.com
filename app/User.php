@@ -37,6 +37,6 @@ class User extends Authenticatable
     //关联报名表
     public function eventUser()
     {
-        return $this->hasOne(EventUser::class,'user_id','id');
+        return $this->hasMany(EventUser::class,'user_id','id');
     }
 }

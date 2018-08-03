@@ -28,15 +28,18 @@ class EventController extends Controller
     public function SignUp(Event $event)
     {
         $user=Auth::user();
-        if($user->eventUser){
+        //对应活动报名的商家
+        $eventUser=$user->eventUser->where('events_id',$event->id)->first();
+
+        if($eventUser){
             session()->flash('danger','您已报名,请勿重复报名');
             return redirect()->route('events.index');
         };
         //活动id  判断活动人数是否已经满了
+        $eventInfo=EventUser::where('events_id',$event->id);
+        $eventNumber=$eventInfo->count();
 
-        $events_id=$event->id;
-        $eventInfo=Event::find($events_id);
-        if($eventInfo->signup_num==0){
+        if($eventNumber>=$event->signup_num){
             session()->flash('danger','活动人数已满,请关注下次活动');
             return redirect()->route('events.index');
         };
@@ -49,27 +52,20 @@ class EventController extends Controller
             return redirect()->route('events.index');
         }
 
-       DB::beginTransaction();
+        EventUser::create(['user_id'=>$user->id,'events_id'=>$event->id]);
 
-        try{
+        session()->flash('success','报名成功');
 
-            EventUser::create(['user_id'=>$user->id,'events_id'=>$events_id]);
-            //报名成功减少一个活动报名人数名额
-            $signup=$event->signup_num;
-            $event->update(['signup_num'=>$signup-1]);
-            DB::commit();
-        }catch (Exception $e){
-
-            DB::rollBack();
-            dd($e);
-            session()->flash('danger','报名失败');
-
-        }
         return redirect()->route('events.index');
     }
     //查看抽奖结果
     public function prizeResult(Event $event)
     {
+        if(!$event->is_prize){
+            session()->flash('danger','开奖日期为'.$event->prize_date.'请等待');
+            return redirect()->route('events.index');
+        }
+
         $prizeusers=PrizeUser::where('events_id',$event->id)->get();
 
         return view('event.prize',compact('event','prizeusers'));
