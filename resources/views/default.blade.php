@@ -64,12 +64,12 @@
 <script type="text/javascript" src="/js/Particleground.js"></script>
 <script type="text/javascript" src="/Js/Treatment.js"></script>
 
-{{--<script>--}}
-    {{--$('body').particleground({--}}
-        {{--dotColor: '#E8DFE8',--}}
-        {{--lineColor: '#faebf9'--}}
-    {{--});--}}
-{{--</script>--}}
+<script>
+    $('body').particleground({
+        dotColor: '#E8DFE8',
+        lineColor: '#faebf9'
+    });
+</script>
 @yield('js')
 </body>
 </html>

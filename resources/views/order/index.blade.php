@@ -13,6 +13,7 @@
             <th>下单时间</th>
             <th>操作</th>
         </tr>
+        @if($orders->count())
         @foreach($orders as $order)
             <tr>
                 <td>{{$order->id}}</td>
@@ -33,11 +34,12 @@
                 </td>
             </tr>
         @endforeach
-
+        @endif
     </table>
     {{$orders->links()}}
 @endsection
 @section('DayOrder')
+    @if($orders->count())
     <h3>本店历史订单数:{{$hisCount}}单</h3>
     <h3 style="margin-top: 25px;">每日订单统计图</h3>
     <div id="Day">
@@ -48,8 +50,10 @@
         </form>
     </div>
     <div id="main" style="width: 600px;height:400px;"></div>
+    @endif
 @endsection
 @section('MonthOrder')
+    @if($orders->count())
     <h3>本店历史菜品销量:{{$menusCount[0]->menus}}份</h3>
     <h3>本月订单统计图</h3>
     <span class="month" style="color: red"></span>
@@ -61,8 +65,10 @@
         </form>
     </div>
     <div id="month" style="width: 600px;height:400px;"></div>
+    @endif
 @endsection
 @section('DayMenu')
+    @if($orders->count())
     <h3>每日菜品销量统计图</h3>
     <div id="Dmenu">
         <form action="" method="get" class="Dmform">
@@ -72,8 +78,10 @@
         </form>
     </div>
     <div id="menu" style="width: 600px;height:400px;"></div>
+    @endif
 @endsection
 @section('MonthMenu')
+    @if($orders->count())
     <h3>每月菜品销量统计图</h3>
     <div id="Monthmenu">
         <form action="" method="get" class="Mmform">
@@ -83,6 +91,7 @@
         </form>
     </div>
     <div id="MonthMenu" style="width: 600px;height:400px;"></div>
+    @endif
 @endsection
 
 @section('js')

@@ -15,20 +15,21 @@ class OrderController extends Controller
     //订单列表
     public function index(Request $request)
     {
-
-
         $shop_id = $request->shop_id;
         $shop_status = Shop::find($shop_id)->status;
         if ($shop_status != 1) {
             session()->flash('danger', '该店还未通过审核，请耐心等待');
             return redirect()->route('shopshow');
         }
+
         $status = ['0' => '待支付', '1' => '待发货', '2' => '待确认', '3' => '完成', '-1' => '已取消'];
         $orders = Order::where('shop_id', $shop_id)->orderBy('created_at', 'desc')->paginate(6);
+
 
         foreach ($orders as &$order) {
 
             $order->status = $status[$order->status];
+
         }
         //历史订单总数
         $hisCount = Order::where('shop_id', $shop_id)->count();

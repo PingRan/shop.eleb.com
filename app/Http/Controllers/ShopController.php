@@ -105,7 +105,6 @@ class ShopController extends Controller
 
     }
 
-
     public function login()
     {
         if (Auth::check()) {
@@ -315,9 +314,13 @@ class ShopController extends Controller
         return view('shop.showall',compact('datashop'));
     }
 
-
     public function addshop(Request $request)
     {
+        //子账号不能开分店
+        if(Auth::user()->child){
+            session()->flash('danger','子账号不能开分店');
+            return redirect()->route('shopshow');
+        }
         $user_id=$request->id;
         $categories = ShopCategory::all();
 
@@ -381,7 +384,7 @@ class ShopController extends Controller
                 $shop_id = $shop->id;//店铺的主键
 
                 $request['shop_id'] = $shop_id;
-
+                $request['child'] = 1;
                 $user=User::create($request->input());
 
                 $user_id=$user->id;
