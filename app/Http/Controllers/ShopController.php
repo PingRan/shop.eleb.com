@@ -250,7 +250,7 @@ class ShopController extends Controller
             [
                 'shop_category_id' => ['required'],
                 'shop_name' => ['required', 'max:20'],
-                'shop_img' => ['required'],
+//                'shop_img' => ['required'],
                 'start_send' => ['required'],
                 'send_cost' => ['required'],
             ], [
