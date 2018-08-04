@@ -12,6 +12,12 @@ use Mockery\Exception;
 
 class EventController extends Controller
 {
+    public function __construct()
+    {
+        $this->middleware('auth',[
+            'except'=>[]
+        ]);
+    }
     //活动列表
     public function index()
     {
@@ -36,16 +42,15 @@ class EventController extends Controller
             return redirect()->route('events.index');
         };
         //活动id  判断活动人数是否已经满了
-        $eventInfo=EventUser::where('events_id',$event->id);
-        $eventNumber=$eventInfo->count();
+        $eventNumber=EventUser::where('events_id',$event->id)->count();
 
         if($eventNumber>=$event->signup_num){
             session()->flash('danger','活动人数已满,请关注下次活动');
             return redirect()->route('events.index');
         };
         //报名时间，如果没有到 不能报名
-        $signup_start=$eventInfo->signup_start;
-        $signup_end=$eventInfo->signup_end;
+        $signup_start=$event->signup_start;
+        $signup_end=$event->signup_end;
         $time=time();
         if($time<$signup_start||$time>$signup_end){
             session()->flash('danger','请在活动报名时间内来报名');

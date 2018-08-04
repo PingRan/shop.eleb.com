@@ -37,6 +37,7 @@ class MenuCategoryController extends Controller
         foreach ($menucategories as $menucategory){
 
             $this->authorize('yourshop',$menucategory);
+            
         }
 
         return view('menucategory.index',compact('menucategories'));

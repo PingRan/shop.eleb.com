@@ -42,7 +42,6 @@
                         </ul>
                     </li>
 
-
                     <li class="dropdown">
                         <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true"
                            aria-expanded="false">抽奖活动<span class="caret"></span></a>

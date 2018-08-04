@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use App\Models\Menu;
 use App\Models\MenuCategory;
 use App\Models\Shop;
+use App\Models\ShopUser;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Storage;
@@ -20,16 +21,30 @@ class MenuController extends Controller
     }
     public function index(Request $request)
     {
-         $shop_id=$request->shop_id;
+        $shop_id=$request->shop_id;
 
-        $shop_status=Shop::find($shop_id)->status;
+        $shop=Shop::find($shop_id);
+        //根据当前登录用户的id获取出该账号下的所有店铺id；
+        $shops=ShopUser::where('user_id',Auth::id())->get(['shop_id'])->toArray();
+        //快速将二维数组转化成一维数组，主要利用数组合并
+        $result=[];
+        //调用回调函数array_map 将二维数组中的每一个一唯数组传入 然后获取对应的值。在合并到空数组中。
+        array_map(function($value)use(&$result){
+           $result=array_merge($result,array_values($value));
+        },$shops);
+
+       if(!in_array($shop_id,$result)){
+           return redirect()->route('shopshow');
+       };
+
+        $shop_status=$shop->status;
 
         if($shop_status!=1){
             session()->flash('danger','该店还未通过审核，请耐心等待');
             return redirect()->route('shopshow');
         }
 
-         session(['shop_id'=>$shop_id]);
+        session(['shop_id'=>$shop_id]);
 
         $menucategories=MenuCategory::where('shop_id',$shop_id)->get();
 
@@ -62,13 +77,6 @@ class MenuController extends Controller
         }
 
         $menus=Menu::where($condition)->paginate(6);
-
-
-        //授权只能看自己店铺下的菜品
-        foreach ($menus as $menu){
-
-            $this->authorize('yourmenu',$menu);
-        }
 
        return view('menu.index',compact('menus','menucategories','where'));
     }
