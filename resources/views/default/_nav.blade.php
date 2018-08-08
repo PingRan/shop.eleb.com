@@ -28,7 +28,7 @@
                     <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true"
                        aria-expanded="false">查看eleb活动<span class="caret"></span></a>
                     <ul class="dropdown-menu">
-                        <li><a href="{{route('activity.index')}}">eleb活动</a></li>
+                        <li><a href="http://admin.eleb.com/active/active_List.html">eleb活动</a></li>
                     </ul>
                 </li>
 

@@ -11,6 +11,7 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Hash;
+use Illuminate\Support\Facades\Redis;
 use Illuminate\Support\Facades\Storage;
 use Illuminate\Validation\Rule;
 
@@ -292,7 +293,8 @@ class ShopController extends Controller
         $shop->update($data);
 
         session()->flash('success', '修改成功');
-
+        //修改店铺信息成功时 清空redis中的缓存。让其去数据库中读出最新的数据
+        Redis::del('shopList');
         return redirect()->route('shop.home');
 
     }

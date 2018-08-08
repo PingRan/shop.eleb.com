@@ -7,6 +7,7 @@ use App\Models\Shop;
 use App\Models\ShopUser;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Redis;
 use Illuminate\Validation\Rule;
 
 class MenuCategoryController extends Controller
@@ -82,8 +83,9 @@ class MenuCategoryController extends Controller
 
         MenuCategory::create($request->input());
 
-
         session()->flash('success','添加成功');
+         //清空redis中缓存的对应的店铺详细信息;
+        Redis::hdel('shopPitch',$shop_id);
 
         return redirect()->route('menucategories.index',['shop_id'=>$shop_id]);
     }
@@ -116,6 +118,8 @@ class MenuCategoryController extends Controller
 
         session()->flash('success','修改成功');
 
+        Redis::hdel('shopPitch',$menucategory->shop_id);
+
         return redirect()->route('menucategories.index',['shop_id'=>session('shop_id')]);
 
     }
@@ -139,6 +143,7 @@ class MenuCategoryController extends Controller
         }
 
         $menucategory->delete();
+        Redis::hdel('shopPitch',$menucategory->shop_id);
         $res=json_encode($success);
         echo $res;
 

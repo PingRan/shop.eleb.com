@@ -8,6 +8,7 @@ use App\Models\PrizeUser;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Redis;
 use Mockery\Exception;
 
 class EventController extends Controller
@@ -21,14 +22,29 @@ class EventController extends Controller
     //活动列表
     public function index()
     {
+        //先判断redis中活动表示是否存在 存在表示活动更新了,重新缓存
+
+             if(is_file('event_List.html')){
+                 return redirect('event_List.html');
+             }
+
         $events=Event::all();
-        return view('event.index',compact('events'));
+        $event_List=view('event.index',compact('events'));
+        file_put_contents('event_List.html',$event_List);
+        return redirect('event_List.html');
     }
 
     public function eventShow(Event $id)
     {
         $event=$id;
-        return view('event.show',compact('event'));
+        $event_id=$event->id;
+        if(is_file('event_Show'.$event_id.'.html')){
+            return redirect('event_Show'.$event_id.'.html');
+        }
+
+         $event_Content=view('event.show',compact('event'));
+         file_put_contents('event_Show'.$event_id.'.html',$event_Content);
+        return redirect('event_Show'.$event_id.'.html');
     }
     //报名
     public function SignUp(Event $event)

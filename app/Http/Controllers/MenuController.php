@@ -6,9 +6,10 @@ use App\Models\Menu;
 use App\Models\MenuCategory;
 use App\Models\Shop;
 use App\Models\ShopUser;
+use App\SphinxClient;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
-use Illuminate\Support\Facades\Storage;
+use Illuminate\Support\Facades\Redis;
 use Illuminate\Validation\Rule;
 
 class MenuController extends Controller
@@ -19,6 +20,27 @@ class MenuController extends Controller
             'except '=>[]
         ]);
     }
+   //搜索条件
+    public function search($keyword)
+    {
+        $cl = new SphinxClient ();
+        $cl->SetServer ( '127.0.0.1', 9312);
+        $cl->SetConnectTimeout ( 10 );
+        $cl->SetArrayResult ( true );
+
+        $cl->SetMatchMode ( SPH_MATCH_EXTENDED2);
+        $cl->SetLimits(0, 1000);
+        $info = $keyword;
+        $res = $cl->Query($info, 'menu');//shopstore_search
+        $result=[];
+        if(isset($res['matches'])){
+            array_map(function($value)use(&$result){
+                $result[]=$value['id'];
+            },$res['matches']);
+        }
+        return $result;
+    }
+    
     public function index(Request $request)
     {
         $shop_id=$request->shop_id;
@@ -44,6 +66,7 @@ class MenuController extends Controller
             return redirect()->route('shopshow');
         }
 
+
         session(['shop_id'=>$shop_id]);
 
         $menucategories=MenuCategory::where('shop_id',$shop_id)->get();
@@ -61,11 +84,6 @@ class MenuController extends Controller
            $where['category_id']=$category_id;
        }
 
-        if($request->goods_name){
-            $condition[]=['goods_name','like',"%{$request->goods_name}%"];
-            $where['goods_name']=$request->goods_name;
-        }
-
         if($request->max_price){
             $condition[]=['goods_price','<=',$request->max_price];
             $where['max_price']=$request->max_price;
@@ -76,7 +94,18 @@ class MenuController extends Controller
             $where['min_price']=$request->min_price;
         }
 
-        $menus=Menu::where($condition)->paginate(6);
+        $keyword=$request->goods_name;
+
+        if($keyword){
+
+            $menus_id=$this->search($request->goods_name);
+
+            $menus=Menu::whereIn('id',$menus_id)->where($condition)->paginate(6);
+
+        }else{
+            $menus=Menu::where($condition)->paginate(6);
+        }
+
 
        return view('menu.index',compact('menus','menucategories','where'));
     }
@@ -86,6 +115,7 @@ class MenuController extends Controller
         $shop_id=session('shop_id');
 
         $menucategories=MenuCategory::where('shop_id',$shop_id)->get();
+
 
         return view('menu.create',compact('menucategories'));
 
@@ -143,6 +173,8 @@ class MenuController extends Controller
         $request['satisfy_count']=mt_rand(10,1000);
 
         Menu::create($request->input());
+
+        Redis::hdel('shopPitch',session('shop_id'));
 
        session()->flash('success','菜品添加成功');
 
@@ -207,6 +239,8 @@ class MenuController extends Controller
 
         session()->flash('success', '菜品修改成功');
 
+        Redis::hdel('shopPitch',$menu->shop_id);
+
         return redirect()->route('menus.index', ['shop_id' => session('shop_id')]);
 
     }
@@ -214,8 +248,8 @@ class MenuController extends Controller
     public function destroy(Menu $menu)
     {
         $this->authorize('yourmenu',$menu);
-       $menu->delete();
-
+        $menu->delete();
+        Redis::hdel('shopPitch',$menu->shop_id);
        echo '删除成功';
     }
 
@@ -233,6 +267,8 @@ class MenuController extends Controller
         $menu->update(['status'=>$status]);
 
         session()->flash('success','操作成功');
+
+        Redis::hdel('shopPitch',$menu->shop_id);
 
         return redirect()->route('menus.index',['shop_id' => session('shop_id')]);
 
